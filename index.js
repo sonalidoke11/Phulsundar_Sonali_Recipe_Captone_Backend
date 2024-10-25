@@ -5,6 +5,7 @@ import cors from 'cors';
 
 //Importing created routes 
 import recipeRoutes from './routes/recipeRoutes.js';
+import userRoutes from './routes/userRoutes.js'; 
 
 // Loading env variables
 dotenv.config(); 
@@ -31,6 +32,7 @@ connectDB();
 
 // Routes
 app.use('/api/recipes', recipeRoutes);
+app.use('/api/users', userRoutes); 
 
 // Start server
 app.listen(PORT, () => {
