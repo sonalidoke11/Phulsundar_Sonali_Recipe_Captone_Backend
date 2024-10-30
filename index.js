@@ -16,6 +16,7 @@ const PORT = process.env.PORT || 4001;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static('uploads'));
 
 // making connection to database
 const connectDB = async () => {

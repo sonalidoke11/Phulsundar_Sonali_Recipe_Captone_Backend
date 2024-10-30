@@ -1,9 +1,22 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
+import multer from 'multer'; //for image upload
 import Recipe from '../models/Recipe.js';
 import User from '../models/User.js';
 
 const router = express.Router();
+
+// Using multer for filre upload
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // path to store files
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const upload = multer({ storage });
 
 // Protect middleware: to check user authentication for POST, PUT, DELETE
 const protect = async (req, res, next) => {
@@ -63,18 +76,20 @@ router.get('/user/:id', protect, async (req, res) => {
 });
 
 // Create new recipe (using protect middeleware)
-router.post('/', protect, async (req, res) => {
-  const { title, description, ingredients, steps, cookingTime, category, image } = req.body;
-
+router.post('/', protect, upload.single('image'),async (req, res) => {
+  const { title, description, ingredients, steps, cookingTime, category} = req.body;
+  const imagePath = req.file ? req.file.path : null; // Use uploaded file path
+  console.log(req.body);
+  console.log(req.file);
   try {
     const newRecipe = new Recipe({
       title,
       description,
-      ingredients,
-      steps,
+      ingredients: JSON.parse(ingredients), // Convert string to array
+      steps: JSON.parse(steps),             // Convert string to array
       cookingTime,
       category,
-      image,
+      image: imagePath,                     // Save image path
       user: req.user._id,  // Associate recipe with logged-in user
     });
 
