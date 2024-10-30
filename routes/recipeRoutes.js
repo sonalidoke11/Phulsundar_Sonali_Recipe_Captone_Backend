@@ -6,7 +6,7 @@ import User from '../models/User.js';
 
 const router = express.Router();
 
-// Using multer for filre upload
+// Using multer for file upload
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/'); // path to store files
@@ -90,7 +90,7 @@ router.post('/', protect, upload.single('image'),async (req, res) => {
       cookingTime,
       category,
       image: imagePath,                     // Save image path
-      user: req.user._id,  // Associate recipe with logged-in user
+      user: req.user._id,                   // Associate recipe with logged-in user
     });
 
     const savedRecipe = await newRecipe.save();
